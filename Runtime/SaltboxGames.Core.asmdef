@@ -1,0 +1,23 @@
+{
+    "name": "SaltboxGames.Core",
+    "rootNamespace": "",
+    "references": [
+        "GUID:756335c0388f7114790e504ed368ae1d",
+        "GUID:c71612acbe346a344abbc0dcfdf4f0bd"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": true,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [
+        {
+            "name": "com.cysharp.memorypack",
+            "expression": "",
+            "define": "MEMORY_PACK"
+        }
+    ],
+    "noEngineReferences": false
+}

@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>SaltboxGames.Core</RootNamespace>
+    <Description>Source-distributed C# library with optional MemoryPack support.</Description>
+    <EnableMemoryPack>false</EnableMemoryPack> <!-- MemoryPack opt-in toggle -->
+    <LangVersion>12</LangVersion> 
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="./Runtime" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="CommandLineParser" Version="2.9.1" />
+    <PackageReference Include="ZLinq" Version="1.5.1" />
+  </ItemGroup>
+  
+  <!-- MEMORY_PACK -->
+  <ItemGroup Condition="'$(EnableMemoryPack)' == 'true'">
+    <PackageReference Include="MemoryPack" Version="1.21.4" />
+  </ItemGroup>
+  
+  <PropertyGroup Condition="'$(EnableMemoryPack)' == 'true'">
+    <DefineConstants>$(DefineConstants);MEMORY_PACK</DefineConstants>
+  </PropertyGroup>
+  <!-- MEMORY_PACK -->
+
+</Project>
