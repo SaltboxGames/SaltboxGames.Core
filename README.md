@@ -7,7 +7,14 @@ Includes optional support for [MemoryPack](https://github.com/Cysharp/MemoryPack
 
 ## 📦 Installation
 
-### 🎮 Unity (via UPM Git URL)
+### 🎮 Unity
+
+1. install [Nuget For Unity](https://github.com/GlitchEnzo/NuGetForUnity)
+2. install [Command Line Parser](https://github.com/commandlineparser/commandline)
+3. install [zlinq](https://github.com/Cysharp/ZLinq?tab=readme-ov-file#unity)
+4. install **SaltboxGames.Core**
+
+#### 🎮 (Via UPM)
 
 ```jsonc
 "com.saltboxgames.core": "git@github.com:SaltboxGames/SaltboxGames.Core.git"
@@ -17,10 +24,10 @@ Add this to your project's `Packages/manifest.json`.
 
 ---
 
-### 🎮 Unity (via Git Submodule)
+#### 🎮 Unity (via Git Submodule)
 
 ```bash
-git submodule add git@github.com:SaltboxGames/SaltboxGames.Core.git ./Packages/SaltboxGames.Core
+git submodule add git@github.com:SaltboxGames/SaltboxGames.Core.git ./Packages/com.saltboxgames.core
 ```
 
 * Unity will automatically recognize this as an embedded package.
@@ -77,24 +84,6 @@ This will:
 
 ---
 
-## 🧪 MemoryPack Example
-
-```csharp
-#if MEMORY_PACK
-[MemoryPackable]
-public partial struct MyData
-{
-    public int Id;
-    public string Name;
-}
-#else
-public struct MyData
-{
-    public int Id;
-    public string Name;
-}
-#endif
-```
 
 ## 🙌 Credits
 
