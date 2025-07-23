@@ -23,7 +23,7 @@ namespace SaltboxGames.Core.Utilities
         
         public static Action<T2> GetFieldSetter<T1, T2>(T1 target, string fieldName)
         {
-            Action<T1, T2> setter = CreateFieldSetter_Internal<T1, T2>(fieldName);
+            Action<T1, T2> setter = CreateFieldSetter<T1, T2>(fieldName);
             return (value) => setter(target, value);
         }
         
