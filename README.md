@@ -5,6 +5,12 @@ Includes optional support for [MemoryPack](https://github.com/Cysharp/MemoryPack
 
 ---
 
+## 📖 Documentation
+
+See the full docs here:  
+👉 [SaltboxGames.Core Documentation](docs/index.md)
+
+
 ## 📦 Installation
 
 ### 🎮 Unity

@@ -16,12 +16,28 @@ namespace SaltboxGames.Core.Utilities
 {
     public static partial class Reflection
     {
+        /// <summary>
+        /// Creates a cached getter for a property on a given object instance, returning a <see cref="Func{TResult}"/> that retrieves the property value.
+        /// </summary>
+        /// <typeparam name="T1">The type of the target object.</typeparam>
+        /// <typeparam name="T2">The type of the property value.</typeparam>
+        /// <param name="target">The instance of the object whose property will be read.</param>
+        /// <param name="propertyName">The name of the property to access.</param>
+        /// <returns>A <see cref="Func{TResult}"/> that retrieves the specified property value from the given instance.</returns>
         public static Func<T2> GetPropertyGetter<T1, T2>(T1 target, string propertyName)
         {
             Func<T1, T2> getter = CreatePropertyGetter<T1, T2>(propertyName);
             return () => getter(target);
         }
 
+        
+        /// <summary>
+        /// Creates or retrieves a cached compiled getter delegate for the specified property on a type.
+        /// </summary>
+        /// <typeparam name="T1">The type that contains the property.</typeparam>
+        /// <typeparam name="T2">The type of the property value.</typeparam>
+        /// <param name="propertyName">The name of the property to get.</param>
+        /// <returns>A function that retrieves the property value from an instance of <typeparamref name="T1"/>.</returns>
         public static Func<T1, T2> CreatePropertyGetter<T1, T2>(string propertyName)
         {
             _getterCache ??= new Dictionary<(Type, string), Delegate>();
@@ -37,6 +53,15 @@ namespace SaltboxGames.Core.Utilities
             return getter;
         }
 
+        /// <summary>
+        /// Builds and compiles an expression tree for getting a property from an object.
+        /// This method does not use or update the cache.
+        /// </summary>
+        /// <typeparam name="T1">The type that contains the property.</typeparam>
+        /// <typeparam name="T2">The type of the property value.</typeparam>
+        /// <param name="propertyName">The name of the property to access.</param>
+        /// <returns>A compiled delegate that retrieves the property value.</returns>
+        /// <exception cref="ArgumentException">Thrown if the property is not found or is not readable.</exception>
         private static Func<T1, T2> CreatePropertyGetter_Internal<T1, T2>(string propertyName)
         {
             PropertyInfo propInfo = typeof(T1).GetProperty(propertyName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);

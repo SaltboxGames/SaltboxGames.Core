@@ -9,5 +9,8 @@
     "name": "Saltbox Games",
     "url": "https://github.com/SaltboxGames"
   },
-  "type": "library"
+  "type": "library",
+  "dependencies": {
+    "com.cysharp.zlinq": "https://github.com/Cysharp/ZLinq.git?path=src/ZLinq.Unity/Assets/ZLinq.Unity"
+  }
 }
