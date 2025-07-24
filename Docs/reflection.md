@@ -57,10 +57,10 @@ setter(100);
 If you want the raw compiled delegate instead of a per-instance version:
 ```csharp
 // Static delegate for any instance
-Action<MyType, int> staticGetter = Reflection.CreateFieldGetter<MyType, int>("_value");
+Action<MyType, int> staticGetter = Reflection.GetFieldSetter<MyType, int>("_value");
 int result = staticGetter(myInstance);
 
-Func<MyType, int> staticSetter = Reflection.CreateFieldSetter<MyType, int>("_value");
+Func<MyType, int> staticSetter = Reflection.GetFieldSetter<MyType, int>("_value");
 int result = staticSetter(myInstance, 100);
 ```
 
@@ -83,7 +83,7 @@ int val = propGetter(); // 123
 
 You can also use the raw delegate version if you're not targeting a single instance:
 ```csharp
-var rawGetter = Reflection.CreateFieldGetter<MyType, int>("_value");
+var rawGetter = Reflection.GetPropertyGetter<MyType, int>("_value");
 int val = rawGetter(instance);
 ```
 
