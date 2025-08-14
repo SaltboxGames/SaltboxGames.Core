@@ -250,7 +250,7 @@ namespace SaltboxGames.Core.Collections
             int desiredCapacity = Math.Max(buffer.Length * 2, count + additionalItems);
             int offset = (desiredCapacity - count) / 2;
             
-            ReplaceBuffer(buffer.Length, offset);
+            ReplaceBuffer(desiredCapacity, offset);
         }
 
         public void Justify()
