@@ -13,7 +13,7 @@ using ZLinq;
 
 namespace SaltboxGames.Core.Collections
 {
-    public partial class CircularBuffer<T> : IValueEnumerable<CircularBufferEnumerator<T>, T>
+    public sealed partial class CircularBuffer<T> : IValueEnumerable<CircularBufferEnumerator<T>, T>
     {
         public ValueEnumerable<CircularBufferEnumerator<T>, T> AsValueEnumerable()
         {
