@@ -6,53 +6,22 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-
 using System;
 using System.Collections.Generic;
-
-#if !UNITY_2019_1_OR_NEWER
-using System.Runtime.InteropServices;
-#endif
+using System.Runtime.CompilerServices;
+using SaltboxGames.Core.Extensions;
 
 namespace SaltboxGames.Core.Utilities
 {
     public static class StringUtilities
     {
-#if !UNITY_2019_1_OR_NEWER
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string LongestCommonPrefix(List<string> strings)
         {
-            Span<string> span = CollectionsMarshal.AsSpan(strings);
+            Span<string> span = strings.AsSpan();
             return LongestCommonPrefix(span);
         }
-#else
-        public static string LongestCommonPrefix(List<string> strings)
-        {
-            if (strings.Count == 0)
-            {
-                return "";
-            }
-            string prefix = strings[0];
-
-            for (int index = 1; index < strings.Count; index++)
-            {
-                string str = strings[index];
-                
-                int i = 0;
-                while (i < prefix.Length && i < str.Length && prefix[i] == str[i])
-                {
-                    i++;
-                }
-                prefix = prefix.Substring(0, i);
-                if (prefix == "")
-                {
-                    break;
-                }
-            }
-
-            return prefix;
-        }
-#endif
-
+        
         public static string LongestCommonPrefix(ReadOnlySpan<string> strings)
         {
             if (strings.Length == 0)

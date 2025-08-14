@@ -31,7 +31,7 @@ namespace SaltboxGames.Core.Utilities
         /// <returns>A <see cref="Action{T}"/> that sets the specified field on the given instance.</returns>
         public static Action<T2> GetFieldSetter<T1, T2>(T1 target, string fieldName)
         {
-            Action<T1, T2> setter = CreateFieldSetter<T1, T2>(fieldName);
+            Action<T1, T2> setter = GetFieldSetter<T1, T2>(fieldName);
             return (value) => setter(target, value);
         }
         
@@ -45,7 +45,7 @@ namespace SaltboxGames.Core.Utilities
         /// <returns>A <see cref="Func{T2}"/> that retrieves the specified field from the given instance.</returns>
         public static Func<T2> GetFieldGetter<T1, T2>(T1 target, string fieldName)
         {
-            Func<T1, T2> getter = CreateFieldGetter<T1, T2>(fieldName);
+            Func<T1, T2> getter = GetFieldGetter<T1, T2>(fieldName);
             return () => getter(target);
         }
         
@@ -56,7 +56,7 @@ namespace SaltboxGames.Core.Utilities
         /// <typeparam name="T2">The type of the field.</typeparam>
         /// <param name="fieldName">The name of the field to set.</param>
         /// <returns>An <see cref="Action{T1, T2}"/> that sets the field value on an instance of <typeparamref name="T1"/>.</returns>
-        public static Action<T1, T2> CreateFieldSetter<T1, T2>(string fieldName)
+        public static Action<T1, T2> GetFieldSetter<T1, T2>(string fieldName)
         {
             _setterCache ??= new Dictionary<(Type, string), Delegate>();
 
@@ -99,7 +99,7 @@ namespace SaltboxGames.Core.Utilities
         /// <typeparam name="T2">The type of the field.</typeparam>
         /// <param name="fieldName">The name of the field to get.</param>
         /// <returns>A <see cref="Func{T1, T2}"/> that gets the field value from an instance of <typeparamref name="T1"/>.</returns>
-        public static Func<T1, T2> CreateFieldGetter<T1, T2>(string fieldName)
+        public static Func<T1, T2> GetFieldGetter<T1, T2>(string fieldName)
         {
             _getterCache ??= new Dictionary<(Type, string), Delegate>();
 

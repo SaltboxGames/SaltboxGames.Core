@@ -26,7 +26,7 @@ namespace SaltboxGames.Core.Utilities
         /// <returns>A <see cref="Func{TResult}"/> that retrieves the specified property value from the given instance.</returns>
         public static Func<T2> GetPropertyGetter<T1, T2>(T1 target, string propertyName)
         {
-            Func<T1, T2> getter = CreatePropertyGetter<T1, T2>(propertyName);
+            Func<T1, T2> getter = GetPropertyGetter<T1, T2>(propertyName);
             return () => getter(target);
         }
 
@@ -38,7 +38,7 @@ namespace SaltboxGames.Core.Utilities
         /// <typeparam name="T2">The type of the property value.</typeparam>
         /// <param name="propertyName">The name of the property to get.</param>
         /// <returns>A function that retrieves the property value from an instance of <typeparamref name="T1"/>.</returns>
-        public static Func<T1, T2> CreatePropertyGetter<T1, T2>(string propertyName)
+        public static Func<T1, T2> GetPropertyGetter<T1, T2>(string propertyName)
         {
             _getterCache ??= new Dictionary<(Type, string), Delegate>();
 
