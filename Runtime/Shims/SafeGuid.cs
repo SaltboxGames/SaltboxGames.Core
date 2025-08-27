@@ -171,5 +171,20 @@ namespace SaltboxGames.Core.Shims
             result = default;
             return false;
         }
+        
+        public void Decompose(out int s1, out int s2, out int s3, out int s4)
+        {
+            s1 = segment1; s2 = segment2; s3 = segment3; s4 = segment4;
+        }
+
+        public static SafeGuid FromSegments(int s1, int s2, int s3, int s4)
+        {
+            SafeGuid guid = default;
+            guid.segment1 = s1;
+            guid.segment2 = s2;
+            guid.segment3 = s3;
+            guid.segment4 = s4;
+            return guid;
+        }
     }
 }
