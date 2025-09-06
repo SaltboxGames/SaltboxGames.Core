@@ -95,7 +95,7 @@ namespace SaltboxGames.Core.Shims
 #endif
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static ulong Diff(in SafeGuid a, in SafeGuid b)
+        private static nuint Diff(in SafeGuid a, in SafeGuid b)
         {
             //Branch-less long compare
             ref byte aPtr = ref Unsafe.As<SafeGuid, byte>(ref Unsafe.AsRef(in a));
@@ -107,7 +107,14 @@ namespace SaltboxGames.Core.Shims
             ulong bLo = Unsafe.ReadUnaligned<ulong>(ref bPtr);
             ulong bHi = Unsafe.ReadUnaligned<ulong>(ref Unsafe.Add(ref bPtr, 8));
 
-            return (aLo ^ bLo) | (aHi ^ bHi);
+            ulong diff = (aLo ^ bLo) | (aHi ^ bHi); 
+            if (IntPtr.Size == 4) // <-- Compile time constant; folded away by JIT/IL2CPP
+            {
+                // slightly more performant on ARM32 systems;
+                return (nuint)(diff | diff >> 32);
+            }
+            
+            return (nuint)diff;
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
