@@ -95,7 +95,7 @@ namespace SaltboxGames.Core.Shims
 #endif
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool operator ==(in SafeGuid a, in SafeGuid b)
+        private static ulong Diff(in SafeGuid a, in SafeGuid b)
         {
             //Branch-less long compare
             ref byte aPtr = ref Unsafe.As<SafeGuid, byte>(ref Unsafe.AsRef(in a));
@@ -107,27 +107,31 @@ namespace SaltboxGames.Core.Shims
             ulong bLo = Unsafe.ReadUnaligned<ulong>(ref bPtr);
             ulong bHi = Unsafe.ReadUnaligned<ulong>(ref Unsafe.Add(ref bPtr, 8));
 
-            ulong diff = (aLo ^ bLo) | (aHi ^ bHi);
-            return diff == 0;
+            return (aLo ^ bLo) | (aHi ^ bHi);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool operator ==(in SafeGuid a, in SafeGuid b)
+        {
+            return Diff(a, b) == 0;
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator !=(in SafeGuid a, in SafeGuid b)
         {
-            return !(a == b);
+            return Diff(a, b) != 0;
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public readonly bool Equals(SafeGuid other)
         {
-            return this == other;
+            return Diff(this, other) == 0;
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public readonly override bool Equals(object obj)
         {
-            return obj is SafeGuid other && 
-                   Equals(other);
+            return obj is SafeGuid other && Diff(this, other) == 0;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
