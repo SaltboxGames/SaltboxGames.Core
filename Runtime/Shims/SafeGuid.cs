@@ -62,7 +62,7 @@ namespace SaltboxGames.Core.Shims
         private Int32 segment4;
 
         //We know the structs are the same size; 16 Bytes.
-        // So we can avoid copies and allocations
+        // So we can avoid a copy and alloc
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static implicit operator Guid(in SafeGuid other)
         {
@@ -97,17 +97,18 @@ namespace SaltboxGames.Core.Shims
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator ==(in SafeGuid a, in SafeGuid b)
         {
-#if SIMD_ENABLED
-            //This float conversion is only ok because we're not doing math.
-            ref System.Numerics.Vector4 selfVec = ref Unsafe.As<SafeGuid, System.Numerics.Vector4>(ref Unsafe.AsRef(in a));
-            ref System.Numerics.Vector4 otherVec = ref Unsafe.As<SafeGuid, System.Numerics.Vector4>(ref Unsafe.AsRef(in b));
-            return System.Numerics.Vector4.Equals(selfVec, otherVec);
-#else
-            return a.segment1 == b.segment1 && 
-                   a.segment2 == b.segment2 && 
-                   a.segment3 == b.segment3 && 
-                   a.segment4 == b.segment4;
-#endif
+            //Branch-less long compare
+            ref byte aPtr = ref Unsafe.As<SafeGuid, byte>(ref Unsafe.AsRef(in a));
+            ref byte bPtr = ref Unsafe.As<SafeGuid, byte>(ref Unsafe.AsRef(in b));
+            
+            ulong aLo = Unsafe.ReadUnaligned<ulong>(ref aPtr);
+            ulong aHi = Unsafe.ReadUnaligned<ulong>(ref Unsafe.Add(ref aPtr, 8));
+            
+            ulong bLo = Unsafe.ReadUnaligned<ulong>(ref bPtr);
+            ulong bHi = Unsafe.ReadUnaligned<ulong>(ref Unsafe.Add(ref bPtr, 8));
+
+            ulong diff = (aLo ^ bLo) | (aHi ^ bHi);
+            return diff == 0;
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -117,33 +118,51 @@ namespace SaltboxGames.Core.Shims
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool Equals(SafeGuid other)
+        public readonly bool Equals(SafeGuid other)
         {
             return this == other;
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override bool Equals(object obj)
+        public readonly override bool Equals(object obj)
         {
             return obj is SafeGuid other && 
                    Equals(other);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override int GetHashCode()
+        public readonly override int GetHashCode()
         {
-            return HashCode.Combine(segment1, segment2, segment3, segment4);
+            const ulong hashMultiplier = 0x9E3779B97F4A7C15ul;
+            const ulong splitMix = 0x94D049BB133111EBul;
+            
+            ref byte ptr = ref Unsafe.As<SafeGuid, byte>(ref Unsafe.AsRef(in this));
+            
+            ulong lo = Unsafe.ReadUnaligned<ulong>(ref ptr);
+            ulong hi = Unsafe.ReadUnaligned<ulong>(ref Unsafe.Add(ref ptr, 8));
+            
+            unchecked
+            {
+                // Branch-less 128->64->32 mix 
+                ulong x = lo ^ (hi * hashMultiplier);
+                x ^= x >> 32;
+                x *= hashMultiplier;
+                x ^= x >> 29;
+                x *= splitMix;
+                x ^= x >> 32;
+                return (int)x;
+            }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override string ToString()
+        public readonly override string ToString()
         {
             // This matches the Unity Editor string Formatting;
             return internalValue.ToString("N");
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public string ToString(string format, IFormatProvider provider)
+        public readonly string ToString(string format, IFormatProvider provider)
         {
             return internalValue.ToString(format, provider);
         }
@@ -172,14 +191,17 @@ namespace SaltboxGames.Core.Shims
             return false;
         }
         
-        public void Decompose(out int s1, out int s2, out int s3, out int s4)
+        public readonly void Decompose(out int s1, out int s2, out int s3, out int s4)
         {
-            s1 = segment1; s2 = segment2; s3 = segment3; s4 = segment4;
+            s1 = segment1; 
+            s2 = segment2; 
+            s3 = segment3; 
+            s4 = segment4;
         }
 
         public static SafeGuid FromSegments(int s1, int s2, int s3, int s4)
         {
-            SafeGuid guid = default;
+            Unsafe.SkipInit(out SafeGuid guid);
             guid.segment1 = s1;
             guid.segment2 = s2;
             guid.segment3 = s3;
