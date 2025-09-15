@@ -23,6 +23,37 @@ namespace SaltboxGames.Core.Extensions
 {
     public static class ListExtensions
     {
+        /// <summary>
+        /// Replaces the element at <paramref name="index"/> with the last element,
+        /// and removes the last element. O(1) but does not preserve order.
+        /// </summary>
+        public static void RemoveAtSwapBack<T>(this List<T> list, int index)
+        {
+            int lastIndex = list.Count - 1;
+            if (index != lastIndex)
+            {
+                list[index] = list[lastIndex];
+            }
+
+            list.RemoveAt(lastIndex);
+        }
+        
+        /// <summary>
+        /// Replaces the item with the last element,
+        /// and removes the last element. O(1) but does not preserve order.
+        /// </summary>
+        public static void RemoveSwapBack<T>(this List<T> list, T item)
+        {
+            int index = list.IndexOf(item);
+            int lastIndex = list.Count - 1;
+            if (index != lastIndex)
+            {
+                list[index] = list[lastIndex];
+            }
+
+            list.RemoveAt(lastIndex);
+        }
+        
 #if UNITY_2021_1_OR_NEWER
         private static class ListReflectionCache<T>
         {
