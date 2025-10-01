@@ -24,7 +24,7 @@ namespace SaltboxGames.Core.Extensions
             while (n > 1)
             {
                 int k = DeterministicRandom.NextInt(n--);
-                Swap(ref span[n], ref span[k]);
+                SpanUtilities.Swap(ref span[n], ref span[k]);
             }
         }
         
@@ -35,13 +35,6 @@ namespace SaltboxGames.Core.Extensions
         public static void Shuffle<T>(this List<T> list)
         {
             Shuffle(list.AsSpan());
-        }
-        
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static void Swap<T>(ref T a, ref T b)
-        {
-            (a, b) = (b, a);
         }
     }
 }
