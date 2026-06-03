@@ -6,7 +6,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-#if zlinq
+#if ZLINQ
 
 using System;
 using ZLinq;
