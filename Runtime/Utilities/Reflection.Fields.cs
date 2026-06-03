@@ -7,6 +7,9 @@
  */
 
 
+
+#if !ENABLE_IL2CPP && (UNITY_6000_0_OR_NEWER || UNITY_EDITOR)
+
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
@@ -134,3 +137,4 @@ namespace SaltboxGames.Core.Utilities
         }
     }
 }
+#endif

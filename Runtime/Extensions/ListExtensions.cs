@@ -8,15 +8,13 @@
 
 using System;
 using System.Collections.Generic;
+
+#if !ENABLE_IL2CPP && (UNITY_6000_0_OR_NEWER || UNITY_EDITOR)
 using SaltboxGames.Core.Utilities;
-
-#if UNITY_2021_1_OR_NEWER
 using UnityEngine.Assertions;
-
-#else
+#elif NET8_0_OR_GREATER
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-
 #endif
 
 namespace SaltboxGames.Core.Extensions
@@ -54,7 +52,7 @@ namespace SaltboxGames.Core.Extensions
             list.RemoveAt(lastIndex);
         }
         
-#if UNITY_2021_1_OR_NEWER
+#if !ENABLE_IL2CPP && (UNITY_6000_0_OR_NEWER || UNITY_EDITOR)
         private static class ListReflectionCache<T>
         {
             public static Func<List<T>, T[]> GetItems;
@@ -70,16 +68,14 @@ namespace SaltboxGames.Core.Extensions
         public static Span<T> AsSpan<T>(this List<T> list)
         {
             ListReflectionCache<T>.GetItems ??= Reflection.GetFieldGetter<List<T>, T[]>("_items");
-
             Assert.IsNotNull(ListReflectionCache<T>.GetItems);
             
             T[] items = ListReflectionCache<T>.GetItems(list);
             return new Span<T>(items, 0, list.Count);
         }
-#else
-
+#elif NET8_0_OR_GREATER
         /// <summary>
-        /// Returns a <see cref="Span{T}"/> over the list using the standard <c>CollectionsMarshal.AsSpan</c> API.
+        /// Returns a <see cref="Span{T}"/> over the list using the standard .NET <c>CollectionsMarshal.AsSpan</c> API.
         /// </summary>
         /// <typeparam name="T">The element type of the list.</typeparam>
         /// <param name="list">The list to expose as a span.</param>

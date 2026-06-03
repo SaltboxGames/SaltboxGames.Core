@@ -27,7 +27,8 @@ namespace SaltboxGames.Core.Extensions
                 SpanUtilities.Swap(ref span[n], ref span[k]);
             }
         }
-        
+
+#if !ENABLE_IL2CPP && (UNITY_6000_0_OR_NEWER || UNITY_EDITOR)
         /// <summary>
         /// Simple in place fisher-yates shuffle
         /// </summary>
@@ -36,5 +37,17 @@ namespace SaltboxGames.Core.Extensions
         {
             Shuffle(list.AsSpan());
         }
+#else
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void Shuffle<T>(this List<T> list)
+        {
+            int n = list.Count;
+            while (n > 1)
+            {
+                int k = DeterministicRandom.NextInt(n--);
+                (list[n], list[k]) = (list[k], list[n]);
+            }
+        }
+#endif    
     }
 }

@@ -1,3 +1,4 @@
+
 /*
  * Copyright (c) 2024 SaltboxGames, Jonathan Gardner
  *
@@ -6,6 +7,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+#if !ENABLE_IL2CPP && (UNITY_6000_0_OR_NEWER || UNITY_EDITOR)
 
 using System;
 using System.Collections.Generic;
@@ -77,3 +79,4 @@ namespace SaltboxGames.Core.Utilities
         }
     }
 }
+#endif
