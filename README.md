@@ -87,3 +87,8 @@ This defines `MEMORY_PACK` and adds the MemoryPack package reference.
 ## License
 
 This package is licensed under MPL 2.0. See [LICENSE](./LICENSE).
+
+## Attribution
+
+Attribution is not required, but is greatly appreciated. 
+If you use this package in your project, please contact us to let us know; we would love to see what you are making with it!
