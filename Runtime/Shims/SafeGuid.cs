@@ -1,5 +1,6 @@
-﻿/*
- * Copyright (c) 2024 SaltboxGames, Jonathan Gardner
+﻿// SPDX-License-Identifier: MPL-2.0
+/*
+ * Copyright (c) 2024-2026 Saltbox Games Cooperative
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -25,7 +26,7 @@ using UnityEngine;
 namespace SaltboxGames.Core.Shims
 {
     /// <summary>
-    /// Unity Runtime, Editor and MemoryPack friendly Guid
+    /// Represents a Unity runtime, Unity editor, and MemoryPack-friendly GUID value.
     /// </summary>
 #if MEMORY_PACK
     [MemoryPackable]
@@ -61,14 +62,22 @@ namespace SaltboxGames.Core.Shims
         [FieldOffset(12)]
         private Int32 segment4;
 
-        //We know the structs are the same size; 16 Bytes.
-        // So we can avoid a copy and alloc
+        /// <summary>
+        /// Converts a <see cref="SafeGuid"/> to a <see cref="Guid"/>.
+        /// </summary>
+        /// <param name="other">The value to convert.</param>
+        /// <returns>The equivalent <see cref="Guid"/> value.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static implicit operator Guid(in SafeGuid other)
         {
             return Unsafe.As<SafeGuid, Guid>(ref Unsafe.AsRef(in other));
         }
 
+        /// <summary>
+        /// Converts a <see cref="Guid"/> to a <see cref="SafeGuid"/>.
+        /// </summary>
+        /// <param name="other">The value to convert.</param>
+        /// <returns>The equivalent <see cref="SafeGuid"/> value.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static implicit operator SafeGuid(in Guid other)
         {
@@ -76,9 +85,11 @@ namespace SaltboxGames.Core.Shims
         }
         
 #if UNITY_EDITOR
-        //Unity's Editor GUID uses a different string formatter
-        // this prioritizes the .ToString() being the same instead of the actual byte value
-        // This is better for interacting with Addressables.
+        /// <summary>
+        /// Converts a Unity editor GUID to a <see cref="SafeGuid"/> using Unity's string representation.
+        /// </summary>
+        /// <param name="other">The Unity editor GUID to convert.</param>
+        /// <returns>The equivalent <see cref="SafeGuid"/> value.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static explicit operator SafeGuid(in GUID other)
         {
@@ -86,6 +97,11 @@ namespace SaltboxGames.Core.Shims
             return parsedValue;
         }
         
+        /// <summary>
+        /// Converts a <see cref="SafeGuid"/> to a Unity editor GUID using Unity's string representation.
+        /// </summary>
+        /// <param name="other">The value to convert.</param>
+        /// <returns>The equivalent Unity editor GUID value.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static explicit operator GUID(in SafeGuid other)
         {
@@ -117,30 +133,56 @@ namespace SaltboxGames.Core.Shims
             return (nuint)diff;
         }
         
+        /// <summary>
+        /// Determines whether two <see cref="SafeGuid"/> values are equal.
+        /// </summary>
+        /// <param name="a">The first value to compare.</param>
+        /// <param name="b">The second value to compare.</param>
+        /// <returns><see langword="true"/> when the values are equal; otherwise <see langword="false"/>.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator ==(in SafeGuid a, in SafeGuid b)
         {
             return Diff(a, b) == 0;
         }
         
+        /// <summary>
+        /// Determines whether two <see cref="SafeGuid"/> values are not equal.
+        /// </summary>
+        /// <param name="a">The first value to compare.</param>
+        /// <param name="b">The second value to compare.</param>
+        /// <returns><see langword="true"/> when the values are not equal; otherwise <see langword="false"/>.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator !=(in SafeGuid a, in SafeGuid b)
         {
             return Diff(a, b) != 0;
         }
         
+        /// <summary>
+        /// Determines whether this value equals another <see cref="SafeGuid"/>.
+        /// </summary>
+        /// <param name="other">The value to compare with this instance.</param>
+        /// <returns><see langword="true"/> when the values are equal; otherwise <see langword="false"/>.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public readonly bool Equals(SafeGuid other)
         {
             return Diff(this, other) == 0;
         }
         
+        /// <summary>
+        /// Determines whether this value equals another object.
+        /// </summary>
+        /// <param name="obj">The object to compare with this instance.</param>
+        /// <returns><see langword="true"/> when <paramref name="obj"/> is an equal <see cref="SafeGuid"/>; otherwise <see langword="false"/>.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public readonly override bool Equals(object obj)
         {
             return obj is SafeGuid other && Diff(this, other) == 0;
         }
 
+        /// <summary>
+        /// Gets a hash code for this value.
+        /// </summary>
+        /// <returns>A hash code for this value.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public readonly override int GetHashCode()
         {
@@ -165,6 +207,10 @@ namespace SaltboxGames.Core.Shims
             }
         }
 
+        /// <summary>
+        /// Formats this value as a 32-digit string without hyphens.
+        /// </summary>
+        /// <returns>The formatted GUID string.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public readonly override string ToString()
         {
@@ -172,24 +218,45 @@ namespace SaltboxGames.Core.Shims
             return internalValue.ToString("N");
         }
         
+        /// <summary>
+        /// Formats this value using the specified GUID format.
+        /// </summary>
+        /// <param name="format">A standard GUID format string.</param>
+        /// <param name="provider">An object that supplies culture-specific formatting information.</param>
+        /// <returns>The formatted GUID string.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public readonly string ToString(string format, IFormatProvider provider)
         {
             return internalValue.ToString(format, provider);
         }
 
+        /// <summary>
+        /// Creates a new <see cref="SafeGuid"/> value.
+        /// </summary>
+        /// <returns>A new GUID value.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static SafeGuid NewGuid()
         {
             return Guid.NewGuid();
         }
         
+        /// <summary>
+        /// Parses a GUID string into a <see cref="SafeGuid"/>.
+        /// </summary>
+        /// <param name="input">The GUID string to parse.</param>
+        /// <returns>The parsed GUID value.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static SafeGuid Parse(ReadOnlySpan<char> input)
         {
             return Guid.Parse(input);
         }
         
+        /// <summary>
+        /// Attempts to parse a GUID string into a <see cref="SafeGuid"/>.
+        /// </summary>
+        /// <param name="input">The GUID string to parse.</param>
+        /// <param name="result">The parsed value when parsing succeeds; otherwise the default value.</param>
+        /// <returns><see langword="true"/> when parsing succeeds; otherwise <see langword="false"/>.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool TryParse(ReadOnlySpan<char> input, out SafeGuid result)
         {
@@ -202,6 +269,13 @@ namespace SaltboxGames.Core.Shims
             return false;
         }
         
+        /// <summary>
+        /// Decomposes this value into four serialized integer segments.
+        /// </summary>
+        /// <param name="s1">The first segment.</param>
+        /// <param name="s2">The second segment.</param>
+        /// <param name="s3">The third segment.</param>
+        /// <param name="s4">The fourth segment.</param>
         public readonly void Decompose(out int s1, out int s2, out int s3, out int s4)
         {
             s1 = segment1; 
@@ -210,6 +284,14 @@ namespace SaltboxGames.Core.Shims
             s4 = segment4;
         }
 
+        /// <summary>
+        /// Creates a <see cref="SafeGuid"/> from four serialized integer segments.
+        /// </summary>
+        /// <param name="s1">The first segment.</param>
+        /// <param name="s2">The second segment.</param>
+        /// <param name="s3">The third segment.</param>
+        /// <param name="s4">The fourth segment.</param>
+        /// <returns>A GUID value composed from the provided segments.</returns>
         public static SafeGuid FromSegments(int s1, int s2, int s3, int s4)
         {
             Unsafe.SkipInit(out SafeGuid guid);
