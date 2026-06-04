@@ -1,39 +1,20 @@
-﻿# 🔍 Reflection Utilities
+# Reflection Utilities
 
-The `SaltboxGames.Core.Utilities.Reflection` class provides thread-local, cached accessors for getting and setting private or public instance fields via compiled expression trees.
+`SaltboxGames.Core.Utilities.Reflection` provides cached, strongly typed delegates for accessing instance fields and properties through compiled expression trees.
 
-This is particularly useful for:
+Reflection helpers are only compiled when `!ENABLE_IL2CPP && (UNITY_6000_0_OR_NEWER || UNITY_EDITOR)` is true. They are intentionally unavailable on IL2CPP targets because they depend on runtime expression compilation.
 
-- High-performance access to fields without using `FieldInfo.SetValue()`
-- Accessing private fields for testing or runtime patching
-- Avoiding repeated reflection overhead with delegate caching
+## Runtime Files
 
----
-
-## Features
-
-- Strongly-typed accessors: `Action<T1>` and `Func<T1>`
-- Zero-allocation once cached
-- Works with private & public instance fields
-
-## Table of Contents
-
-- [🔍 Reflection Utilities](#-reflection-utilities)
-  - [Features](#features)
-  - [Table of Contents](#table-of-contents)
-  - [Fields](#fields)
-    - [📦 Example Usage](#-example-usage)
-    - [Advanced Usage: Direct Getter/Setter Creation](#advanced-usage-direct-gettersetter-creation)
-  - [Properties](#properties)
-    - [📦 Example Usage](#-example-usage-1)
-    - [Advanced Usage: Direct Getter Creation](#advanced-usage-direct-getter-creation)
-
+- `Runtime/Utilities/Reflection.Fields.cs`
+- `Runtime/Utilities/Reflection.Properties.cs`
 
 ## Fields
 
-### 📦 Example Usage
+Use field helpers when you need repeated access to a public or private instance field without repeatedly calling `FieldInfo.GetValue()` or `FieldInfo.SetValue()`.
 
 ```csharp
+using System;
 using SaltboxGames.Core.Utilities;
 
 class MyType
@@ -41,50 +22,55 @@ class MyType
     private int _value = 42;
 }
 
-var myInstance = new MyType();
+var instance = new MyType();
 
-// Create a getter for "_value"
-Func<int> getter = Reflection.GetFieldGetter<MyType, int>(myInstance, "_value");
-int val = getter(); // 42
+Func<int> getter = Reflection.GetFieldGetter<MyType, int>(instance, "_value");
+Action<int> setter = Reflection.GetFieldSetter<MyType, int>(instance, "_value");
 
-// Create a setter for "_value"
-Action<int> setter = Reflection.GetFieldSetter<MyType, int>(myInstance, "_value");
+int before = getter();
 setter(100);
+int after = getter();
 ```
 
-### Advanced Usage: Direct Getter/Setter Creation
+For reusable delegates that take the target instance as a parameter:
 
-If you want the raw compiled delegate instead of a per-instance version:
 ```csharp
-// Static delegate for any instance
-Action<MyType, int> staticGetter = Reflection.GetFieldSetter<MyType, int>("_value");
-int result = staticGetter(myInstance);
+Func<MyType, int> getter = Reflection.GetFieldGetter<MyType, int>("_value");
+Action<MyType, int> setter = Reflection.GetFieldSetter<MyType, int>("_value");
 
-Func<MyType, int> staticSetter = Reflection.GetFieldSetter<MyType, int>("_value");
-int result = staticSetter(myInstance, 100);
+int value = getter(instance);
+setter(instance, 100);
 ```
 
 ## Properties
-### 📦 Example Usage
+
+Property helpers currently support getters only.
+
 ```csharp
+using System;
+using SaltboxGames.Core.Utilities;
+
 class MyType
 {
-    private int MyProperty { get; set; } = 123;
+    private int Value { get; set; } = 123;
 }
 
 var instance = new MyType();
 
-var propGetter = Reflection.GetPropertyGetter<MyType, int>(instance, "MyProperty");
-int val = propGetter(); // 123
+Func<int> getter = Reflection.GetPropertyGetter<MyType, int>(instance, "Value");
+int value = getter();
 ```
 
+For a reusable property getter:
 
-### Advanced Usage: Direct Getter Creation
-
-You can also use the raw delegate version if you're not targeting a single instance:
 ```csharp
-var rawGetter = Reflection.GetPropertyGetter<MyType, int>("_value");
-int val = rawGetter(instance);
+Func<MyType, int> getter = Reflection.GetPropertyGetter<MyType, int>("Value");
+int value = getter(instance);
 ```
 
+## Notes
 
+- Delegates are cached in thread-static dictionaries.
+- Only instance members are supported.
+- Missing fields or unreadable properties throw `ArgumentException`.
+- These APIs should be guarded by the same preprocessor condition if referenced from code that also builds for IL2CPP.

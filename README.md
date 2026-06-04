@@ -1,72 +1,78 @@
 # SaltboxGames.Core
 
-A lightweight, source-distributed utilities library for both **Unity** and **.NET Core** projects.
-Includes optional support for [MemoryPack](https://github.com/Cysharp/MemoryPack) serialization via conditional compilation.
+SaltboxGames.Core is a source-distributed C# utility package for Unity and standalone .NET projects.
+It contains small collection types, pooling helpers, span/list extensions, deterministic random utilities, reflection helpers, and shared runtime shims.
 
----
+## Documentation
 
-## 📖 Documentation
+Start with the package documentation index: [Docs/README.md](./Docs/README.md).
 
-See the full docs here:  
-👉 [SaltboxGames.Core Documentation](./Docs/)
+## Unity Installation
 
+### Git Dependency
 
-## 📦 Installation
+Add the package to your Unity project's `Packages/manifest.json`:
 
-### 🎮 Unity
-
-1. install [Nuget For Unity](https://github.com/GlitchEnzo/NuGetForUnity)
-2. install [Command Line Parser](https://github.com/commandlineparser/commandline)
-3. install [zlinq](https://github.com/Cysharp/ZLinq?tab=readme-ov-file#unity)
-4. install **SaltboxGames.Core**
-
-#### 🎮 (Via UPM)
-
-```jsonc
-"com.saltboxgames.core": "git@github.com:SaltboxGames/SaltboxGames.Core.git"
+```json
+{
+  "dependencies": {
+    "com.saltboxgames.core": "git@github.com:SaltboxGames/SaltboxGames.Core.git"
+  }
+}
 ```
 
-Add this to your project's `Packages/manifest.json`.
+### Embedded Package
 
----
-
-#### 🎮 Unity (via Git Submodule)
+Use a git submodule if you want the package checked into `Packages/`:
 
 ```bash
 git submodule add git@github.com:SaltboxGames/SaltboxGames.Core.git ./Packages/com.saltboxgames.core
 ```
 
-* Unity will automatically recognize this as an embedded package.
-* No `.asmdef` changes needed unless you want to add dependencies.
+Unity will detect it as an embedded package.
 
----
+### Unity Optional Integrations
 
-### ⚙️ .NET Core
+Unity enables optional integrations automatically when the matching packages are installed:
 
-1. Add the library as a submodule:
+1. [ZLinq for Unity](https://github.com/Cysharp/ZLinq?tab=readme-ov-file#unity)
+2. [MemoryPack for Unity](https://github.com/Cysharp/MemoryPack?tab=readme-ov-file#unity)
 
-   ```bash
-   git submodule add git@github.com:SaltboxGames/SaltboxGames.Core.git SaltboxGames.Core
-   ```
+No manual compilation symbols are required in Unity. The package assembly definition defines `ZLINQ` and `MEMORY_PACK` when Unity detects the corresponding packages.
 
-2. Reference it in your consuming project's `.csproj`:
+## .NET Installation
 
-   ```xml
-   <ProjectReference Include="SaltboxGames.Core/SaltboxGames.Core.csproj" />
-   ```
+Add the package as a submodule:
 
----
+```bash
+git submodule add git@github.com:SaltboxGames/SaltboxGames.Core.git SaltboxGames.Core
+```
 
-## 🔧 Enabling MemoryPack Support (Optional)
+Reference it from your consuming project's `.csproj`:
 
-SaltboxGames.Core can integrate with [MemoryPack](https://github.com/Cysharp/MemoryPack) for fast, zero-allocation serialization.
-This support is **opt-in** via a build flag.
+```xml
+<ProjectReference Include="SaltboxGames.Core/SaltboxGames.Core.csproj" />
+```
 
----
+### .NET Optional Integrations
 
-### ✅ For .NET Core Projects
+[ZLinq](https://github.com/Cysharp/ZLinq) integration is enabled when the `ZLINQ` compilation symbol is defined.
 
-To enable MemoryPack, create a file named `Directory.Build.props` at the **root of your solution** (alongside your `.sln` file):
+Create `Directory.Build.props` at the root of your solution:
+
+```xml
+<Project>
+  <PropertyGroup>
+    <EnableZLinq>true</EnableZLinq>
+  </PropertyGroup>
+</Project>
+```
+
+This defines `ZLINQ` and adds the ZLinq package reference.
+
+[MemoryPack](https://github.com/Cysharp/MemoryPack) integration is enabled when the `MEMORY_PACK` compilation symbol is defined.
+
+Add `EnableMemoryPack` to the same `Directory.Build.props` file:
 
 ```xml
 <Project>
@@ -76,22 +82,13 @@ To enable MemoryPack, create a file named `Directory.Build.props` at the **root 
 </Project>
 ```
 
-This will:
+This defines `MEMORY_PACK` and adds the MemoryPack package reference.
 
-* Define `MEMORY_PACK`
-* Add the `MemoryPack` NuGet package automatically
+## License
 
----
+This package is licensed under MPL 2.0. See [LICENSE](./LICENSE).
 
-### ✅ For Unity Projects
+## Attribution
 
-1. Install [MemoryPack-Unity](https://github.com/Cysharp/MemoryPack?tab=readme-ov-file#unity)
-2. This will automatically define `MEMORY_PACK`
-
----
-
-
-## 🙌 Credits
-
-Built with ❤️ by SaltboxGames.
-Pull requests, issues, and feedback welcome!
+Attribution is not required, but is greatly appreciated. 
+If you use this package in your project, please contact us to let us know; we would love to see what you are making with it!

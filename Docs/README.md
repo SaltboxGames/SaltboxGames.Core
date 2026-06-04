@@ -1,31 +1,31 @@
 # SaltboxGames.Core Documentation
 
-Documentation for the utilities and functions found in **SaltboxGames.Core** 
-_(Work in Progress)_
+Documentation for the runtime and package files in `SaltboxGames.Core`.
 
----
+## Runtime Areas
 
-### Reflection Utilities
-Access private or public fields and properties via cached expression trees.
-- [Field & Property Accessors](./reflection.md)
+- [Collections](./collections.md): collection types and pooling helpers.
+- [Extensions](./extensions.md): extension methods.
+- [Utilities](./utilities.md): general-purpose utility helpers.
+- [Shims](./shims.md): cross-target compatibility types.
+- [Reflection](./reflection.md): reflection-backed access helpers.
 
-### Command System
-Unified terminal and developer console command registry.
-- _Coming soon..._
+## Runtime File Coverage
 
-### Shims
-.NET Core & Unity Editor/Runtime helpers for shared data
-- _Coming soon..._
+- [`Runtime/Collections/CircularBuffer.cs`](./collections.md#circularbuffercs): pooled double-ended circular buffer.
+- [`Runtime/Collections/CircularBuffer.ZLinq.cs`](./collections.md#circularbufferzlinqcs): optional ZLinq value enumerable integration.
+- [`Runtime/Collections/ListPool.cs`](./collections.md#listpoolcs): reusable `List<T>` pool.
+- [`Runtime/Collections/ObjectPool.cs`](./collections.md#objectpoolcs): reusable object pool for `new()` types.
+- [`Runtime/Collections/QueuePool.cs`](./collections.md#queuepoolcs): reusable `Queue<T>` pool.
+- [`Runtime/Extensions/ListExtensions.cs`](./extensions.md#listextensionscs): swap-back removal and target-specific `List<T>.AsSpan()` support.
+- [`Runtime/Extensions/ShuffleExtensions.cs`](./extensions.md#shuffleextensionscs): deterministic Fisher-Yates shuffle helpers.
+- [`Runtime/Shims/SafeGuid.cs`](./shims.md#safeguidcs): serializable and Unity-friendly `Guid` wrapper.
+- [`Runtime/Utilities/DeterministicRandom.cs`](./utilities.md#deterministicrandomcs): deterministic XorShift-style random source.
+- [`Runtime/Utilities/Reflection.Fields.cs`](./utilities.md#reflectionfieldscs): cached compiled field getters and setters.
+- [`Runtime/Utilities/Reflection.Properties.cs`](./utilities.md#reflectionpropertiescs): cached compiled property getters.
+- [`Runtime/Utilities/SpanUtilities.cs`](./utilities.md#spanutilitiescs): span/reference swap helpers.
+- [`Runtime/Utilities/StringUtilities.cs`](./utilities.md#stringutilitiescs): longest common prefix helpers.
 
----
+## Installation
 
-## Getting Started
-
-To install and integrate this library into your Unity or .NET project, see the [README](../README.md).
-
----
-
-## Contribution & Feedback
-
-Want to contribute docs or fix something?  
-Open a pull request or start a discussion on [GitHub](https://github.com/SaltboxGames/SaltboxGames.Core).
+See the package [README](../README.md) for Unity and .NET installation notes.

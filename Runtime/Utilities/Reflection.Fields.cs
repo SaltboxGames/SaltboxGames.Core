@@ -1,11 +1,15 @@
+// SPDX-License-Identifier: MPL-2.0
 /*
- * Copyright (c) 2024 SaltboxGames, Jonathan Gardner
+ * Copyright (c) 2024-2026 Saltbox Games Cooperative
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+
+
+#if !ENABLE_IL2CPP && (UNITY_6000_0_OR_NEWER || UNITY_EDITOR)
 
 using System;
 using System.Collections.Generic;
@@ -14,6 +18,10 @@ using System.Reflection;
 
 namespace SaltboxGames.Core.Utilities
 {
+    /// <summary>
+    /// Provides cached reflection helpers for compiled field and property accessors.
+    /// </summary>
+    /// <remarks>This API is unavailable on IL2CPP targets.</remarks>
     public static partial class Reflection
     {
         [ThreadStatic]
@@ -29,6 +37,7 @@ namespace SaltboxGames.Core.Utilities
         /// <param name="target">The instance of the object whose field will be set.</param>
         /// <param name="fieldName">The name of the field to set.</param>
         /// <returns>A <see cref="Action{T}"/> that sets the specified field on the given instance.</returns>
+        /// <exception cref="ArgumentException">Thrown when the field is not found.</exception>
         public static Action<T2> GetFieldSetter<T1, T2>(T1 target, string fieldName)
         {
             Action<T1, T2> setter = GetFieldSetter<T1, T2>(fieldName);
@@ -43,6 +52,7 @@ namespace SaltboxGames.Core.Utilities
         /// <param name="target">The instance of the object whose field will be read.</param>
         /// <param name="fieldName">The name of the field to read.</param>
         /// <returns>A <see cref="Func{T2}"/> that retrieves the specified field from the given instance.</returns>
+        /// <exception cref="ArgumentException">Thrown when the field is not found.</exception>
         public static Func<T2> GetFieldGetter<T1, T2>(T1 target, string fieldName)
         {
             Func<T1, T2> getter = GetFieldGetter<T1, T2>(fieldName);
@@ -56,6 +66,7 @@ namespace SaltboxGames.Core.Utilities
         /// <typeparam name="T2">The type of the field.</typeparam>
         /// <param name="fieldName">The name of the field to set.</param>
         /// <returns>An <see cref="Action{T1, T2}"/> that sets the field value on an instance of <typeparamref name="T1"/>.</returns>
+        /// <exception cref="ArgumentException">Thrown when the field is not found.</exception>
         public static Action<T1, T2> GetFieldSetter<T1, T2>(string fieldName)
         {
             _setterCache ??= new Dictionary<(Type, string), Delegate>();
@@ -99,6 +110,7 @@ namespace SaltboxGames.Core.Utilities
         /// <typeparam name="T2">The type of the field.</typeparam>
         /// <param name="fieldName">The name of the field to get.</param>
         /// <returns>A <see cref="Func{T1, T2}"/> that gets the field value from an instance of <typeparamref name="T1"/>.</returns>
+        /// <exception cref="ArgumentException">Thrown when the field is not found.</exception>
         public static Func<T1, T2> GetFieldGetter<T1, T2>(string fieldName)
         {
             _getterCache ??= new Dictionary<(Type, string), Delegate>();
@@ -134,3 +146,4 @@ namespace SaltboxGames.Core.Utilities
         }
     }
 }
+#endif

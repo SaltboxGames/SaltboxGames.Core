@@ -1,11 +1,13 @@
+// SPDX-License-Identifier: MPL-2.0
 /*
- * Copyright (c) 2024 SaltboxGames, Jonathan Gardner
+ * Copyright (c) 2024-2026 Saltbox Games Cooperative
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+#if !ENABLE_IL2CPP && (UNITY_6000_0_OR_NEWER || UNITY_EDITOR)
 
 using System;
 using System.Collections.Generic;
@@ -14,6 +16,10 @@ using System.Reflection;
 
 namespace SaltboxGames.Core.Utilities
 {
+    /// <summary>
+    /// Provides cached reflection helpers for compiled field and property accessors.
+    /// </summary>
+    /// <remarks>This API is unavailable on IL2CPP targets.</remarks>
     public static partial class Reflection
     {
         /// <summary>
@@ -24,6 +30,7 @@ namespace SaltboxGames.Core.Utilities
         /// <param name="target">The instance of the object whose property will be read.</param>
         /// <param name="propertyName">The name of the property to access.</param>
         /// <returns>A <see cref="Func{TResult}"/> that retrieves the specified property value from the given instance.</returns>
+        /// <exception cref="ArgumentException">Thrown when the property is not found or is not readable.</exception>
         public static Func<T2> GetPropertyGetter<T1, T2>(T1 target, string propertyName)
         {
             Func<T1, T2> getter = GetPropertyGetter<T1, T2>(propertyName);
@@ -38,6 +45,7 @@ namespace SaltboxGames.Core.Utilities
         /// <typeparam name="T2">The type of the property value.</typeparam>
         /// <param name="propertyName">The name of the property to get.</param>
         /// <returns>A function that retrieves the property value from an instance of <typeparamref name="T1"/>.</returns>
+        /// <exception cref="ArgumentException">Thrown when the property is not found or is not readable.</exception>
         public static Func<T1, T2> GetPropertyGetter<T1, T2>(string propertyName)
         {
             _getterCache ??= new Dictionary<(Type, string), Delegate>();
@@ -77,3 +85,4 @@ namespace SaltboxGames.Core.Utilities
         }
     }
 }
+#endif
