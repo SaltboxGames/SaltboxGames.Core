@@ -1,7 +1,7 @@
 # SaltboxGames.Core
 
 SaltboxGames.Core is a source-distributed C# utility package for Unity and standalone .NET projects.
-It contains small collection types, pooling helpers, span/list extensions, deterministic random utilities, reflection helpers, and shared runtime shims.
+It provides shared runtime helpers intended to be embedded directly into Unity and .NET projects.
 
 ## Documentation
 

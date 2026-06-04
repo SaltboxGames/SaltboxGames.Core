@@ -17,10 +17,12 @@ Documentation for the runtime and package files in `SaltboxGames.Core`.
 - [`Runtime/Collections/ListPool.cs`](./collections.md#listpoolcs): reusable `List<T>` pool.
 - [`Runtime/Collections/ObjectPool.cs`](./collections.md#objectpoolcs): reusable object pool for `new()` types.
 - [`Runtime/Collections/QueuePool.cs`](./collections.md#queuepoolcs): reusable `Queue<T>` pool.
+- [`Runtime/Extensions/EnumExtensions.cs`](./extensions.md#enumextensionscs): allocation-free enum conversion and value index helpers.
 - [`Runtime/Extensions/ListExtensions.cs`](./extensions.md#listextensionscs): swap-back removal and target-specific `List<T>.AsSpan()` support.
 - [`Runtime/Extensions/ShuffleExtensions.cs`](./extensions.md#shuffleextensionscs): deterministic Fisher-Yates shuffle helpers.
 - [`Runtime/Shims/SafeGuid.cs`](./shims.md#safeguidcs): serializable and Unity-friendly `Guid` wrapper.
 - [`Runtime/Utilities/DeterministicRandom.cs`](./utilities.md#deterministicrandomcs): deterministic XorShift-style random source.
+- [`Runtime/Utilities/EnumHelper.cs`](./utilities.md#enumhelpercs): cached enum values, `int` conversion, and value index lookup.
 - [`Runtime/Utilities/Reflection.Fields.cs`](./utilities.md#reflectionfieldscs): cached compiled field getters and setters.
 - [`Runtime/Utilities/Reflection.Properties.cs`](./utilities.md#reflectionpropertiescs): cached compiled property getters.
 - [`Runtime/Utilities/SpanUtilities.cs`](./utilities.md#spanutilitiescs): span/reference swap helpers.

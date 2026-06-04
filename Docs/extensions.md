@@ -2,6 +2,34 @@
 
 Extension helpers live under `SaltboxGames.Core.Extensions`.
 
+## EnumExtensions.cs
+
+`EnumExtensions` exposes allocation-free enum helpers backed by [`EnumHelper<T>`](./utilities.md#enumhelpercs).
+
+Key members:
+
+- `GetIndex<T>(this T value)`: returns the zero-based index in `EnumHelper<T>.Values`, or `-1` when the enum value is not declared.
+- `ToInt<T>(this T value)`: converts the enum value to its 32-bit integer representation.
+
+`GetIndex` is useful when enum values need stable array/list indexing without requiring the enum's raw values to be contiguous from zero.
+
+Example:
+
+```csharp
+using SaltboxGames.Core.Extensions;
+
+enum EquipSlot
+{
+    Head = 10,
+    Body = 20,
+    Feet = 30
+}
+
+int bodyIndex = EquipSlot.Body.GetIndex(); // 1
+int rawValue = EquipSlot.Body.ToInt(); // 20
+int missingIndex = ((EquipSlot)99).GetIndex(); // -1
+```
+
 ## ListExtensions.cs
 
 `ListExtensions` contains list-specific helpers.
