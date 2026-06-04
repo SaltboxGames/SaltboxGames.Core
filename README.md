@@ -31,13 +31,14 @@ git submodule add git@github.com:SaltboxGames/SaltboxGames.Core.git ./Packages/c
 
 Unity will detect it as an embedded package.
 
-### Unity Dependencies
+### Unity Optional Integrations
 
-Install these before using the package in Unity:
+Unity enables optional integrations automatically when the matching packages are installed:
 
-1. [NuGetForUnity](https://github.com/GlitchEnzo/NuGetForUnity)
-2. [CommandLineParser](https://github.com/commandlineparser/commandline)
-3. [ZLinq](https://github.com/Cysharp/ZLinq?tab=readme-ov-file#unity), if using the optional ZLinq integration
+1. [ZLinq for Unity](https://github.com/Cysharp/ZLinq?tab=readme-ov-file#unity)
+2. [MemoryPack for Unity](https://github.com/Cysharp/MemoryPack?tab=readme-ov-file#unity)
+
+No manual compilation symbols are required in Unity. The package assembly definition defines `ZLINQ` and `MEMORY_PACK` when Unity detects the corresponding packages.
 
 ## .NET Installation
 
@@ -53,13 +54,25 @@ Reference it from your consuming project's `.csproj`:
 <ProjectReference Include="SaltboxGames.Core/SaltboxGames.Core.csproj" />
 ```
 
-## Optional MemoryPack Support
+### .NET Optional Integrations
 
-[`SafeGuid`](./Docs/shims.md#safeguidcs) can integrate with [MemoryPack](https://github.com/Cysharp/MemoryPack) when the `MEMORY_PACK` compilation symbol is defined.
-
-### .NET
+[ZLinq](https://github.com/Cysharp/ZLinq) integration is enabled when the `ZLINQ` compilation symbol is defined.
 
 Create `Directory.Build.props` at the root of your solution:
+
+```xml
+<Project>
+  <PropertyGroup>
+    <EnableZLinq>true</EnableZLinq>
+  </PropertyGroup>
+</Project>
+```
+
+This defines `ZLINQ` and adds the ZLinq package reference.
+
+[MemoryPack](https://github.com/Cysharp/MemoryPack) integration is enabled when the `MEMORY_PACK` compilation symbol is defined.
+
+Add `EnableMemoryPack` to the same `Directory.Build.props` file:
 
 ```xml
 <Project>
@@ -70,10 +83,6 @@ Create `Directory.Build.props` at the root of your solution:
 ```
 
 This defines `MEMORY_PACK` and adds the MemoryPack package reference.
-
-### Unity
-
-Install [MemoryPack for Unity](https://github.com/Cysharp/MemoryPack?tab=readme-ov-file#unity). The Unity package defines `MEMORY_PACK` for compatible assemblies.
 
 ## License
 
