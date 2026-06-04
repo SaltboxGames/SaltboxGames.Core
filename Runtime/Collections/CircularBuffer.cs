@@ -1,4 +1,5 @@
-﻿/*
+﻿// SPDX-License-Identifier: MPL-2.0
+/*
  * Copyright (c) 2024-2026 Saltbox Games Cooperative
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
