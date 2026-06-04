@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2024 SaltboxGames, Jonathan Gardner
+ * Copyright (c) 2024 SaltboxGames
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,9 +13,17 @@ using SaltboxGames.Core.Extensions;
 
 namespace SaltboxGames.Core.Utilities
 {
+    /// <summary>
+    /// Provides helper methods for string collections.
+    /// </summary>
     public static class StringUtilities
     {
 #if !ENABLE_IL2CPP && (UNITY_6000_0_OR_NEWER || UNITY_EDITOR)
+        /// <summary>
+        /// Finds the longest prefix shared by all strings in a list.
+        /// </summary>
+        /// <param name="strings">The strings to inspect.</param>
+        /// <returns>The longest common prefix, or an empty string when no prefix is shared.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string LongestCommonPrefix(List<string> strings)
         {
@@ -23,6 +31,11 @@ namespace SaltboxGames.Core.Utilities
             return LongestCommonPrefix(span);
         }
 #else
+        /// <summary>
+        /// Finds the longest prefix shared by all strings in a list.
+        /// </summary>
+        /// <param name="strings">The strings to inspect.</param>
+        /// <returns>The longest common prefix, or an empty string when no prefix is shared.</returns>
         public static string LongestCommonPrefix(List<string> strings)
         {
             if (strings.Count == 0)
@@ -49,6 +62,11 @@ namespace SaltboxGames.Core.Utilities
             return prefix;
         }        
 #endif
+        /// <summary>
+        /// Finds the longest prefix shared by all strings in a span.
+        /// </summary>
+        /// <param name="strings">The strings to inspect.</param>
+        /// <returns>The longest common prefix, or an empty string when no prefix is shared.</returns>
         public static string LongestCommonPrefix(ReadOnlySpan<string> strings)
         {
             if (strings.Length == 0)

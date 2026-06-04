@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2024 SaltboxGames, Jonathan Gardner
+ * Copyright (c) 2024 SaltboxGames
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -19,12 +19,18 @@ using System.Runtime.InteropServices;
 
 namespace SaltboxGames.Core.Extensions
 {
+    /// <summary>
+    /// Provides extension methods for <see cref="List{T}"/>.
+    /// </summary>
     public static class ListExtensions
     {
         /// <summary>
         /// Replaces the element at <paramref name="index"/> with the last element,
         /// and removes the last element. O(1) but does not preserve order.
         /// </summary>
+        /// <typeparam name="T">The element type of the list.</typeparam>
+        /// <param name="list">The list to modify.</param>
+        /// <param name="index">The index of the element to remove.</param>
         public static void RemoveAtSwapBack<T>(this List<T> list, int index)
         {
             int lastIndex = list.Count - 1;
@@ -40,6 +46,9 @@ namespace SaltboxGames.Core.Extensions
         /// Replaces the item with the last element,
         /// and removes the last element. O(1) but does not preserve order.
         /// </summary>
+        /// <typeparam name="T">The element type of the list.</typeparam>
+        /// <param name="list">The list to modify.</param>
+        /// <param name="item">The item to remove.</param>
         public static void RemoveSwapBack<T>(this List<T> list, T item)
         {
             int index = list.IndexOf(item);
@@ -55,7 +64,7 @@ namespace SaltboxGames.Core.Extensions
 #if !ENABLE_IL2CPP && (UNITY_6000_0_OR_NEWER || UNITY_EDITOR)
         private static class ListReflectionCache<T>
         {
-            public static Func<List<T>, T[]> GetItems;
+            internal static Func<List<T>, T[]> GetItems;
         }
         
         /// <summary>
@@ -65,6 +74,7 @@ namespace SaltboxGames.Core.Extensions
         /// <typeparam name="T">The element type of the list.</typeparam>
         /// <param name="list">The list to expose as a span.</param>
         /// <returns>A span over the elements in the list (up to <c>list.Count</c>).</returns>
+        /// <remarks>This overload is unavailable on IL2CPP targets.</remarks>
         public static Span<T> AsSpan<T>(this List<T> list)
         {
             ListReflectionCache<T>.GetItems ??= Reflection.GetFieldGetter<List<T>, T[]>("_items");
@@ -80,6 +90,7 @@ namespace SaltboxGames.Core.Extensions
         /// <typeparam name="T">The element type of the list.</typeparam>
         /// <param name="list">The list to expose as a span.</param>
         /// <returns>A span over the elements in the list.</returns>
+        /// <remarks>This overload is used for standalone .NET builds.</remarks>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Span<T> AsSpan<T>(this List<T> list)
         {
