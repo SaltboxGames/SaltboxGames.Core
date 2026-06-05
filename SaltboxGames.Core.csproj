@@ -3,8 +3,9 @@
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <RootNamespace>SaltboxGames.Core</RootNamespace>
-    <Description>Source-distributed C# library with optional MemoryPack and ZLinq support.</Description>
+    <Description>Source-distributed C# library with optional MemoryPack, Newtonsoft.Json, and ZLinq support.</Description>
     <EnableMemoryPack>false</EnableMemoryPack> <!-- MemoryPack opt-in toggle -->
+    <EnableNewtonsoftJson>false</EnableNewtonsoftJson> <!-- Newtonsoft.Json opt-in toggle -->
     <EnableZLinq>false</EnableZLinq> <!-- ZLinq opt-in toggle -->
     <LangVersion>12</LangVersion> 
   </PropertyGroup>
@@ -32,5 +33,15 @@
     <DefineConstants>$(DefineConstants);MEMORY_PACK</DefineConstants>
   </PropertyGroup>
   <!-- MEMORY_PACK -->
+
+  <!-- NEWTONSOFT_JSON -->
+  <ItemGroup Condition="'$(EnableNewtonsoftJson)' == 'true'">
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+  </ItemGroup>
+  
+  <PropertyGroup Condition="'$(EnableNewtonsoftJson)' == 'true'">
+    <DefineConstants>$(DefineConstants);NEWTONSOFT_JSON</DefineConstants>
+  </PropertyGroup>
+  <!-- NEWTONSOFT_JSON -->
 
 </Project>
