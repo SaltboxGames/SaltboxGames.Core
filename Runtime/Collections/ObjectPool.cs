@@ -24,7 +24,6 @@ namespace SaltboxGames.Core.Collections
         /// </summary>
         public static ObjectPool<T> Shared = new ObjectPool<T>();
         
-        [ThreadStatic]
         private readonly Stack<T> _pool;
 
         /// <summary>
