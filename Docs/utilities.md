@@ -20,6 +20,45 @@ Key members:
 
 The generator uses shared static state and atomic updates. It is deterministic after `Seed`, but it is not a cryptographic random source.
 
+## EnumHelper.cs
+
+`EnumHelper<T>` caches enum metadata and lookup delegates per enum type.
+
+Key members:
+
+- `Values`: values returned by `Enum.GetValues(typeof(T))`.
+- `Count`: number of declared values.
+- `ToInt32(T value)`: cached delegate that converts an enum value to its 32-bit integer representation.
+- `GetIndex(T value)`: cached delegate that returns the zero-based index in `Values`, or `-1` when the value is not declared.
+
+`GetIndex` chooses a lookup strategy when the generic type is initialized. All strategies return the index into `Values`.
+
+- Direct conversion for enums declared as `0, 1, 2...`.
+- Offset conversion for sequential enums that start somewhere else, such as `10, 11, 12`.
+- Dense array lookup for small value ranges.
+- Linear search for small sparse enums.
+- Dictionary lookup for larger sparse enums.
+
+`ToInt32` supports all enum backing types, but `uint`, `long`, and `ulong` values outside the `int` range throw due to checked conversion.
+
+Example:
+
+```csharp
+using SaltboxGames.Core.Utilities;
+
+enum ItemState
+{
+    Hidden = 10,
+    Visible = 11,
+    Disabled = 12
+}
+
+int count = EnumHelper<ItemState>.Count; // 3
+int raw = EnumHelper<ItemState>.ToInt32(ItemState.Visible); // 11
+int index = EnumHelper<ItemState>.GetIndex(ItemState.Visible); // 1
+int undefined = EnumHelper<ItemState>.GetIndex((ItemState)99); // -1
+```
+
 ## Reflection.Fields.cs
 
 Provides cached compiled delegates for instance field access.
