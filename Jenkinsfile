@@ -34,6 +34,12 @@ pipeline {
                 }
                 stages {
                     stage('Build') {
+                        agent {
+                            docker {
+                                image 'mcr.microsoft.com/dotnet/sdk:9.0'
+                                label 'docker'
+                            }
+                        }                        
                         steps {
                             echo "Build for ${CONFIGURATRION}: ZLINQ = ${ZLINQ}, MEMORYPACK = ${MEMORYPACK}, NEWTONSOFTJSON = ${NEWTONSOFTJSON}"
                             sh '/usr/bin/dotnet dotnet build -c ${CONFIGURATRION} -p:EnableZLinq=${ZLINQ} -p:EnableMemoryPack=${MEMORYPACK} -p:EnableNewtonsoftJson=${NEWTONSOFTJSON}'
