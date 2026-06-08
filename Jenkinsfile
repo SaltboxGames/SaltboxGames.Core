@@ -10,6 +10,12 @@ pipeline {
         ))
     }
 
+    environment {
+        HOME = "${WORKSPACE}"
+        DOTNET_CLI_HOME = "${WORKSPACE}"
+        NUGET_PACKAGES = "${WORKSPACE}/.nuget/packages"
+    }
+
     stages {
         stage('BuildAndTest') {
             matrix {
@@ -42,8 +48,7 @@ pipeline {
                         }                        
                         steps {
                             echo "Build for ${CONFIGURATRION}: ZLINQ = ${ZLINQ}, MEMORYPACK = ${MEMORYPACK}, NEWTONSOFTJSON = ${NEWTONSOFTJSON}"
-                            sh 'which dotnet'
-                            sh "dotnet build -c ${CONFIGURATRION} -p:EnableZLinq=${ZLINQ} -p:EnableMemoryPack=${MEMORYPACK} -p:EnableNewtonsoftJson=${NEWTONSOFTJSON}"
+                            sh "/usr/bin/dotnet build -c ${CONFIGURATRION} -p:EnableZLinq=${ZLINQ} -p:EnableMemoryPack=${MEMORYPACK} -p:EnableNewtonsoftJson=${NEWTONSOFTJSON}"
                         }
                     }
                     // TODO: tests
