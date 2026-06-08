@@ -42,7 +42,8 @@ pipeline {
                         }                        
                         steps {
                             echo "Build for ${CONFIGURATRION}: ZLINQ = ${ZLINQ}, MEMORYPACK = ${MEMORYPACK}, NEWTONSOFTJSON = ${NEWTONSOFTJSON}"
-                            sh 'dotnet dotnet build -c "${CONFIGURATRION}" -p:EnableZLinq="${ZLINQ}" -p:EnableMemoryPack="${MEMORYPACK}" -p:EnableNewtonsoftJson="${NEWTONSOFTJSON}"'
+                            sh 'which dotnet'
+                            sh "dotnet build -c ${CONFIGURATRION} -p:EnableZLinq=${ZLINQ} -p:EnableMemoryPack=${MEMORYPACK} -p:EnableNewtonsoftJson=${NEWTONSOFTJSON}"
                         }
                     }
                     // TODO: tests
