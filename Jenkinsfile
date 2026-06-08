@@ -13,7 +13,7 @@ pipeline {
     stages {
         stage('BuildAndTest') {
             matrix {
-                agent any
+                agent none
                 axes {
                     axis {
                         name 'CONFIGURATRION'
