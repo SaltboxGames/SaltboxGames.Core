@@ -37,8 +37,9 @@ Unity enables optional integrations automatically when the matching packages are
 
 1. [ZLinq for Unity](https://github.com/Cysharp/ZLinq?tab=readme-ov-file#unity)
 2. [MemoryPack for Unity](https://github.com/Cysharp/MemoryPack?tab=readme-ov-file#unity)
+3. [Newtonsoft Json for Unity](https://docs.unity3d.com/Packages/com.unity.nuget.newtonsoft-json@latest)
 
-No manual compilation symbols are required in Unity. The package assembly definition defines `ZLINQ` and `MEMORY_PACK` when Unity detects the corresponding packages.
+No manual compilation symbols are required in Unity. The package assembly definition defines `ZLINQ`, `MEMORY_PACK`, and `NEWTONSOFT_JSON` when Unity detects the corresponding packages.
 
 ## .NET Installation
 
@@ -83,6 +84,20 @@ Add `EnableMemoryPack` to the same `Directory.Build.props` file:
 ```
 
 This defines `MEMORY_PACK` and adds the MemoryPack package reference.
+
+[Newtonsoft.Json](https://www.newtonsoft.com/json) integration is enabled when the `NEWTONSOFT_JSON` compilation symbol is defined.
+
+Add `EnableNewtonsoftJson` to the same `Directory.Build.props` file:
+
+```xml
+<Project>
+  <PropertyGroup>
+    <EnableNewtonsoftJson>true</EnableNewtonsoftJson>
+  </PropertyGroup>
+</Project>
+```
+
+This defines `NEWTONSOFT_JSON` and adds the Newtonsoft.Json package reference.
 
 ## License
 

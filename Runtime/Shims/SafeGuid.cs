@@ -11,56 +11,17 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-#if MEMORY_PACK
-using MemoryPack;
-#endif
-
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
-
-#if UNITY_2019_4_OR_NEWER
-using UnityEngine;
-#endif
-
 namespace SaltboxGames.Core.Shims
 {
     /// <summary>
-    /// Represents a Unity runtime, Unity editor, and MemoryPack-friendly GUID value.
+    /// Represents a serializable, target-friendly GUID value.
     /// </summary>
-#if MEMORY_PACK
-    [MemoryPackable]
-#endif
     [Serializable]
     [StructLayout(LayoutKind.Explicit)]
     public partial struct SafeGuid : IEquatable<SafeGuid>, IFormattable
     {
         [FieldOffset(0)]
         private Guid internalValue;
-        
-#if UNITY_2019_4_OR_NEWER
-        [SerializeField]
-#endif
-        [FieldOffset(0)]
-        private Int32 segment1;
-
-#if UNITY_2019_4_OR_NEWER
-        [SerializeField]
-#endif
-        [FieldOffset(4)]
-        private Int32 segment2;
-
-#if UNITY_2019_4_OR_NEWER
-        [SerializeField]
-#endif
-        [FieldOffset(8)]
-        private Int32 segment3;
-
-#if UNITY_2019_4_OR_NEWER
-        [SerializeField]
-#endif
-        [FieldOffset(12)]
-        private Int32 segment4;
 
         /// <summary>
         /// Converts a <see cref="SafeGuid"/> to a <see cref="Guid"/>.
@@ -83,33 +44,7 @@ namespace SaltboxGames.Core.Shims
         {
             return Unsafe.As<Guid, SafeGuid>(ref Unsafe.AsRef(in other));
         }
-        
-#if UNITY_EDITOR
-        /// <summary>
-        /// Converts a Unity editor GUID to a <see cref="SafeGuid"/> using Unity's string representation.
-        /// </summary>
-        /// <param name="other">The Unity editor GUID to convert.</param>
-        /// <returns>The equivalent <see cref="SafeGuid"/> value.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static explicit operator SafeGuid(in GUID other)
-        {
-            Guid.TryParse(other.ToString(), out Guid parsedValue);
-            return parsedValue;
-        }
-        
-        /// <summary>
-        /// Converts a <see cref="SafeGuid"/> to a Unity editor GUID using Unity's string representation.
-        /// </summary>
-        /// <param name="other">The value to convert.</param>
-        /// <returns>The equivalent Unity editor GUID value.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static explicit operator GUID(in SafeGuid other)
-        {
-            GUID.TryParse(other.internalValue.ToString("N"), out GUID parsedValue);
-            return parsedValue;
-        }
-#endif
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static nuint Diff(in SafeGuid a, in SafeGuid b)
         {
@@ -267,39 +202,6 @@ namespace SaltboxGames.Core.Shims
             }
             result = default;
             return false;
-        }
-        
-        /// <summary>
-        /// Decomposes this value into four serialized integer segments.
-        /// </summary>
-        /// <param name="s1">The first segment.</param>
-        /// <param name="s2">The second segment.</param>
-        /// <param name="s3">The third segment.</param>
-        /// <param name="s4">The fourth segment.</param>
-        public readonly void Decompose(out int s1, out int s2, out int s3, out int s4)
-        {
-            s1 = segment1; 
-            s2 = segment2; 
-            s3 = segment3; 
-            s4 = segment4;
-        }
-
-        /// <summary>
-        /// Creates a <see cref="SafeGuid"/> from four serialized integer segments.
-        /// </summary>
-        /// <param name="s1">The first segment.</param>
-        /// <param name="s2">The second segment.</param>
-        /// <param name="s3">The third segment.</param>
-        /// <param name="s4">The fourth segment.</param>
-        /// <returns>A GUID value composed from the provided segments.</returns>
-        public static SafeGuid FromSegments(int s1, int s2, int s3, int s4)
-        {
-            Unsafe.SkipInit(out SafeGuid guid);
-            guid.segment1 = s1;
-            guid.segment2 = s2;
-            guid.segment3 = s3;
-            guid.segment4 = s4;
-            return guid;
         }
     }
 }

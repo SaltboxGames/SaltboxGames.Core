@@ -10,3 +10,4 @@
 using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("SaltboxGames.Unity")]
+[assembly: InternalsVisibleTo("SaltboxGames.Unity.Editor")]
