@@ -13,10 +13,13 @@ pipeline {
     stages {
         stage('BuildAndTest') {
             matrix {
-                agent none
+                agent {
+                    label 'dotnet10'
+                }
+
                 axes {
                     axis {
-                        name 'CONFIGURATRION'
+                        name 'CONFIGURATION'
                         values 'Debug', 'Release'
                     }
                     axis {
@@ -32,24 +35,22 @@ pipeline {
                         values 'true', 'false'
                     }
                 }
+
                 stages {
                     stage('Build') {
-                        agent {
-                            docker {
-                                image 'mcr.microsoft.com/dotnet/sdk:9.0'
-                                label 'docker'
-                            }
-                        }
-                        environment {
-                            HOME = "${WORKSPACE}"
-                            DOTNET_CLI_HOME = "${WORKSPACE}"
-                            NUGET_PACKAGES = "${WORKSPACE}/.nuget/packages"
-                        }
                         steps {
-                            echo "Build for ${CONFIGURATRION}: ZLINQ = ${ZLINQ}, MEMORYPACK = ${MEMORYPACK}, NEWTONSOFTJSON = ${NEWTONSOFTJSON}"
-                            sh "/usr/bin/dotnet build -c ${CONFIGURATRION} -p:EnableZLinq=${ZLINQ} -p:EnableMemoryPack=${MEMORYPACK} -p:EnableNewtonsoftJson=${NEWTONSOFTJSON}"
+                            echo "Build for ${CONFIGURATION}: ZLINQ = ${ZLINQ}, MEMORYPACK = ${MEMORYPACK}, NEWTONSOFTJSON = ${NEWTONSOFTJSON}"
+
+                            sh """
+                                dotnet build \
+                                    -c ${CONFIGURATION} \
+                                    -p:EnableZLinq=${ZLINQ} \
+                                    -p:EnableMemoryPack=${MEMORYPACK} \
+                                    -p:EnableNewtonsoftJson=${NEWTONSOFTJSON}
+                            """
                         }
                     }
+
                     // TODO: tests
                 }
             }
