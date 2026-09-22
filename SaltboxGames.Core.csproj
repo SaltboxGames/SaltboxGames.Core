@@ -8,6 +8,7 @@
     <EnableNewtonsoftJson>false</EnableNewtonsoftJson> <!-- Newtonsoft.Json opt-in toggle -->
     <EnableZLinq>false</EnableZLinq> <!-- ZLinq opt-in toggle -->
     <LangVersion>12</LangVersion> 
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks> 
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,7 +17,7 @@
   
   <!-- ZLINQ -->
   <ItemGroup Condition="'$(EnableZLinq)' == 'true'">
-    <PackageReference Include="ZLinq" Version="1.5.1" />
+    <PackageReference Include="ZLinq" Version="1.5.6" />
   </ItemGroup>
   
   <PropertyGroup Condition="'$(EnableZLinq)' == 'true'">
